@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Calculator | Uday Mishra</title>
+  <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,800&family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+  <style>
+    .project-container {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 100px 20px 20px;
+    }
+    .back-btn {
+      position: absolute;
+      top: 30px;
+      left: 40px;
+      color: var(--accent-secondary);
+      text-decoration: none;
+      font-family: var(--font-mono);
+      font-weight: bold;
+      z-index: 1001;
+      font-size: 1.2rem;
+    }
+    .back-btn:hover {
+      text-shadow: 0 0 10px var(--accent-secondary);
+    }
+    .calc-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; }
+    .calc-display { grid-column: span 4; background: rgba(0,0,0,0.5); border: 1px solid var(--glass-border); padding: 15px; font-family: var(--font-mono); font-size: 2.5rem; text-align: right; border-radius: 10px; margin-bottom: 15px; min-height: 70px; color: #fff; display: flex; align-items: center; justify-content: flex-end; overflow: hidden; }
+    .calc-btn { padding: 20px; font-size: 1.5rem; font-family: var(--font-mono); border: none; border-radius: 10px; cursor: pointer; transition: all 0.2s; background: rgba(255,255,255,0.05); color: white; }
+    .calc-btn:hover { background: rgba(255,255,255,0.15); transform: translateY(-2px); }
+    .calc-btn.op { background: rgba(188, 19, 254, 0.1); color: var(--accent-secondary); }
+    .calc-btn.op:hover { background: rgba(188, 19, 254, 0.3); }
+    .calc-btn.eq { grid-column: span 2; background: var(--accent); color: white; font-weight: bold; }
+    .calc-btn.eq:hover { box-shadow: 0 0 15px rgba(188, 19, 254, 0.5); }
+  </style>
+</head>
+<body class="vanta-bg">
+  <div id="vanta-canvas" style="position: fixed; inset: 0; z-index: -1;"></div>
+  
+  <a href="index.html" class="back-btn">← Back to Portfolio</a>
+  
+  <div class="project-container">
+    <div class="glass-card" style="padding: 3rem; width: 100%; max-width: 400px;" data-tilt data-tilt-glare data-tilt-max-glare="0.2">
+      <h2 style="font-family: var(--font-display); font-size: 2.5rem; margin-bottom: 2rem; color: var(--accent); text-align: center;">Calculator</h2>
+      
+      <div class="calc-display" id="display">0</div>
+      <div class="calc-grid">
+        <button class="calc-btn op" onclick="clearDisplay()">C</button>
+        <button class="calc-btn op" onclick="append('/')">/</button>
+        <button class="calc-btn op" onclick="append('*')">*</button>
+        <button class="calc-btn op" onclick="append('-')">-</button>
+        <button class="calc-btn" onclick="append('7')">7</button>
+        <button class="calc-btn" onclick="append('8')">8</button>
+        <button class="calc-btn" onclick="append('9')">9</button>
+        <button class="calc-btn op" onclick="append('+')" style="grid-row: span 2;">+</button>
+        <button class="calc-btn" onclick="append('4')">4</button>
+        <button class="calc-btn" onclick="append('5')">5</button>
+        <button class="calc-btn" onclick="append('6')">6</button>
+        <button class="calc-btn" onclick="append('1')">1</button>
+        <button class="calc-btn" onclick="append('2')">2</button>
+        <button class="calc-btn" onclick="append('3')">3</button>
+        <button class="calc-btn eq" onclick="calculate()" style="grid-row: span 2; height: 100%;">=</button>
+        <button class="calc-btn" onclick="append('0')" style="grid-column: span 2;">0</button>
+        <button class="calc-btn" onclick="append('.')">.</button>
+      </div>
+
+    </div>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/vanilla-tilt/1.8.0/vanilla-tilt.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r134/three.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/vanta@latest/dist/vanta.net.min.js"></script>
+  <script>
+    if (window.VANTA) VANTA.NET({ el: "#vanta-canvas", mouseControls: true, touchControls: true, gyroControls: false, minHeight: 200.00, minWidth: 200.00, scale: 1.00, scaleMobile: 1.00, color: 0xbc13fe, backgroundColor: 0x060608, points: 10.00, maxDistance: 20.00, spacing: 20.00 });
+    
+    let display = document.getElementById('display');
+    let shouldReset = false;
+    
+    function append(val) {
+      if(shouldReset && !isNaN(val)) { display.innerText = val; shouldReset = false; }
+      else if(display.innerText === '0' && val !== '.') { display.innerText = val; }
+      else { display.innerText += val; shouldReset = false; }
+      
+      // visual feedback
+      display.style.transform = 'scale(0.98)';
+      setTimeout(() => display.style.transform = 'scale(1)', 50);
+    }
+    
+    function clearDisplay() { display.innerText = '0'; shouldReset = false; }
+    
+    function calculate() {
+      try { 
+        display.innerText = eval(display.innerText); 
+        shouldReset = true;
+      }
+      catch(e) { display.innerText = 'Error'; shouldReset = true; }
+    }
+  </script>
+</body>
+</html>

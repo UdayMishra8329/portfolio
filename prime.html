@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Prime Checker | Uday Mishra</title>
+  <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,800&family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+  <style>
+    .project-container { min-height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 100px 20px 20px; }
+    .back-btn { position: absolute; top: 30px; left: 40px; color: var(--accent-secondary); text-decoration: none; font-family: var(--font-mono); font-weight: bold; z-index: 1001; font-size: 1.2rem; }
+    .back-btn:hover { text-shadow: 0 0 10px var(--accent-secondary); }
+    .app-input { width: 100%; padding: 15px; border-radius: 8px; border: 1px solid var(--glass-border); background: rgba(0,0,0,0.4); color: white; font-size: 1.5rem; margin-bottom: 20px; text-align: center; font-family: var(--font-mono); }
+    .app-input:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 15px rgba(188, 19, 254, 0.3); }
+    /* hiding number spinners */
+    .app-input::-webkit-outer-spin-button, .app-input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+    .result-box { margin-top: 30px; font-size: 1.5rem; font-family: var(--font-mono); min-height: 50px; padding: 20px; border-radius: 8px; transition: 0.3s; opacity: 0; }
+    .success { background: rgba(0,255,136,0.1); color: #00ff88; border: 1px solid rgba(0,255,136,0.3); }
+    .error { background: rgba(255,51,102,0.1); color: #ff3366; border: 1px solid rgba(255,51,102,0.3); }
+    .explanation { font-size: 1rem; color: #ccc; margin-top: 10px; font-family: var(--font-pari); }
+  </style>
+</head>
+<body class="vanta-bg">
+  <div id="vanta-canvas" style="position: fixed; inset: 0; z-index: -1;"></div>
+  
+  <a href="index.html" class="back-btn">← Back to Portfolio</a>
+  
+  <div class="project-container">
+    <div class="glass-card" style="padding: 3rem; width: 100%; max-width: 450px; text-align: center;" data-tilt data-tilt-glare data-tilt-max-glare="0.2">
+      <h2 style="font-family: var(--font-display); font-size: 2.5rem; margin-bottom: 2rem; color: var(--accent);">Is it Prime?</h2>
+      
+      <input type="number" id="numVal" class="app-input" placeholder="Enter an integer" onkeyup="if(event.key === 'Enter') checkPrime()">
+      <button class="btn-glow" style="width: 100%; border: none; cursor: pointer; display: block;" onclick="checkPrime()">Analyze</button>
+      
+      <div id="primeResult" class="result-box"></div>
+    </div>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/vanilla-tilt/1.8.0/vanilla-tilt.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r134/three.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/vanta@latest/dist/vanta.net.min.js"></script>
+  <script>
+    if (window.VANTA) VANTA.NET({ el: "#vanta-canvas", mouseControls: true, touchControls: true, gyroControls: false, minHeight: 200.00, minWidth: 200.00, scale: 1.00, scaleMobile: 1.00, color: 0xbc13fe, backgroundColor: 0x060608, points: 10.00, maxDistance: 20.00, spacing: 20.00 });
+    
+    function checkPrime() {
+      const val = parseInt(document.getElementById('numVal').value);
+      const res = document.getElementById('primeResult');
+      res.style.opacity = '0';
+      
+      setTimeout(() => {
+        if (isNaN(val)) {
+          res.innerHTML = "Please enter a valid number.";
+          res.className = 'result-box error';
+        } else if (val <= 1) {
+          res.innerHTML = `<strong>${val} is not prime.</strong><div class="explanation">Numbers less than or equal to 1 are not prime numbers.</div>`;
+          res.className = 'result-box error';
+        } else {
+          let isPrime = true;
+          let divisor = 0;
+          for (let i = 2; i <= Math.sqrt(val); i++) {
+            if (val % i === 0) {
+              isPrime = false;
+              divisor = i;
+              break;
+            }
+          }
+          if (isPrime) {
+            res.innerHTML = `<strong>${val} is PRIME! ✨</strong><div class="explanation">It is only divisible by 1 and itself.</div>`;
+            res.className = 'result-box success';
+          } else {
+            res.innerHTML = `<strong>${val} is NOT prime.</strong><div class="explanation">It is divisible by ${divisor}.</div>`;
+            res.className = 'result-box error';
+          }
+        }
+        res.style.opacity = '1';
+      }, 200);
+    }
+  </script>
+</body>
+</html>

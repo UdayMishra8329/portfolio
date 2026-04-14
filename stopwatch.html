@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Stopwatch | Uday Mishra</title>
+  <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,800&family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+  <style>
+    .project-container { min-height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 100px 20px 20px; }
+    .back-btn { position: absolute; top: 30px; left: 40px; color: var(--accent-secondary); text-decoration: none; font-family: var(--font-mono); font-weight: bold; z-index: 1001; font-size: 1.2rem; }
+    .back-btn:hover { text-shadow: 0 0 10px var(--accent-secondary); }
+    .time-display { font-family: var(--font-mono); font-size: 4.5rem; font-weight: bold; color: #fff; margin: 20px 0 40px; text-shadow: 0 0 15px rgba(255,255,255,0.4); text-align: center; font-variant-numeric: tabular-nums; }
+    .time-display span { display: inline-block; width: 85px; text-align: center; }
+    .time-display .ms { font-size: 2rem; color: var(--accent-secondary); width: 50px; }
+    .btn-group { display: flex; gap: 15px; justify-content: center; margin-bottom: 30px; }
+    .sw-btn { padding: 15px 25px; border-radius: 50px; border: 1px solid var(--glass-border); font-family: var(--font-mono); font-weight: bold; font-size: 1.1rem; text-transform: uppercase; cursor: pointer; background: rgba(255,255,255,0.05); color: white; transition: 0.3s; }
+    .sw-btn:hover { background: rgba(255,255,255,0.15); transform: translateY(-3px); }
+    .sw-btn.start { background: rgba(0, 255, 136, 0.1); border-color: rgba(0, 255, 136, 0.5); color: #00ff88; }
+    .sw-btn.start:hover { background: rgba(0, 255, 136, 0.2); box-shadow: 0 0 15px rgba(0, 255, 136, 0.4); }
+    .sw-btn.stop { background: rgba(255, 51, 102, 0.1); border-color: rgba(255, 51, 102, 0.5); color: #ff3366; }
+    .sw-btn.stop:hover { background: rgba(255, 51, 102, 0.2); box-shadow: 0 0 15px rgba(255, 51, 102, 0.4); }
+    .laps { max-height: 150px; overflow-y: auto; text-align: left; padding-right: 10px; }
+    .laps::-webkit-scrollbar { width: 5px; }
+    .laps::-webkit-scrollbar-thumb { background: var(--accent); border-radius: 5px; }
+    .lap-item { display: flex; justify-content: space-between; padding: 10px; border-bottom: 1px solid rgba(255,255,255,0.1); font-family: var(--font-mono); font-size: 0.9rem; color: #ccc; }
+  </style>
+</head>
+<body class="vanta-bg">
+  <div id="vanta-canvas" style="position: fixed; inset: 0; z-index: -1;"></div>
+  
+  <a href="index.html" class="back-btn">← Back to Portfolio</a>
+  
+  <div class="project-container">
+    <div class="glass-card" style="padding: 2.5rem; width: 100%; max-width: 500px;" data-tilt data-tilt-glare data-tilt-max-glare="0.2">
+      <h2 style="font-family: var(--font-display); font-size: 2rem; color: var(--accent); text-align: center; text-transform: uppercase;">Stopwatch</h2>
+      
+      <div class="time-display" id="timeDisplay">
+        <span id="min">00</span>:<span id="sec">00</span><span class="ms">.<span id="ms">00</span></span>
+      </div>
+      
+      <div class="btn-group">
+        <button class="sw-btn start" id="startBtn" onclick="startStop()">Start</button>
+        <button class="sw-btn" onclick="lap()">Lap</button>
+        <button class="sw-btn" onclick="reset()">Reset</button>
+      </div>
+
+      <div class="laps" id="lapsList"></div>
+    </div>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/vanilla-tilt/1.8.0/vanilla-tilt.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r134/three.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/vanta@latest/dist/vanta.net.min.js"></script>
+  <script>
+    if (window.VANTA) VANTA.NET({ el: "#vanta-canvas", mouseControls: true, touchControls: true, gyroControls: false, minHeight: 200.00, minWidth: 200.00, scale: 1.00, scaleMobile: 1.00, color: 0xbc13fe, backgroundColor: 0x060608, points: 10.00, maxDistance: 20.00, spacing: 20.00 });
+    
+    let startTime, updatedTime, difference, tInterval;
+    let running = false;
+    let lapCount = 1;
+
+    function startStop() {
+      if (!running) {
+        startTime = new Date().getTime();
+        tInterval = setInterval(getShowTime, 10);
+        running = true;
+        let btn = document.getElementById('startBtn');
+        btn.innerText = 'Stop';
+        btn.className = 'sw-btn stop';
+      } else {
+        clearInterval(tInterval);
+        running = false;
+        let btn = document.getElementById('startBtn');
+        btn.innerText = 'Start';
+        btn.className = 'sw-btn start';
+      }
+    }
+
+    function reset() {
+      clearInterval(tInterval);
+      running = false;
+      let btn = document.getElementById('startBtn');
+      btn.innerText = 'Start';
+      btn.className = 'sw-btn start';
+      document.getElementById('min').innerHTML = '00';
+      document.getElementById('sec').innerHTML = '00';
+      document.getElementById('ms').innerHTML = '00';
+      document.getElementById('lapsList').innerHTML = '';
+      lapCount = 1;
+    }
+
+    function lap() {
+      if(running) {
+        let lapTime = document.getElementById('timeDisplay').innerText.replace(/\n/g, '');
+        let lapsList = document.getElementById('lapsList');
+        let d = document.createElement('div');
+        d.className = 'lap-item';
+        d.innerHTML = `<span>Lap ${lapCount}</span><span>${lapTime}</span>`;
+        lapsList.prepend(d);
+        lapCount++;
+      }
+    }
+
+    function getShowTime() {
+      updatedTime = new Date().getTime();
+      difference = updatedTime - startTime;
+      
+      let minutes = Math.floor((difference % (1000 * 60 * 60)) / (1000 * 60));
+      let seconds = Math.floor((difference % (1000 * 60)) / 1000);
+      let milliseconds = Math.floor((difference % 1000) / 10);
+
+      minutes = (minutes < 10) ? "0" + minutes : minutes;
+      seconds = (seconds < 10) ? "0" + seconds : seconds;
+      milliseconds = (milliseconds < 10) ? "0" + milliseconds : milliseconds;
+
+      document.getElementById('min').innerText = minutes;
+      document.getElementById('sec').innerText = seconds;
+      document.getElementById('ms').innerText = milliseconds;
+    }
+  </script>
+</body>
+</html>

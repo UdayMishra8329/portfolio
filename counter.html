@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Counter | Uday Mishra</title>
+  <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,800&family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+  <style>
+    .project-container { min-height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 100px 20px 20px; }
+    .back-btn { position: absolute; top: 30px; left: 40px; color: var(--accent-secondary); text-decoration: none; font-family: var(--font-mono); font-weight: bold; z-index: 1001; font-size: 1.2rem; }
+    .back-btn:hover { text-shadow: 0 0 10px var(--accent-secondary); }
+    .counter-display { font-size: 8rem; font-family: var(--font-display); font-weight: 800; text-align: center; margin: 30px 0; color: var(--accent-secondary); text-shadow: 0 0 30px rgba(0,240,255,0.3); transition: transform 0.1s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+    .counter-controls { display: flex; gap: 20px; justify-content: center; align-items: center; }
+    .c-btn { width: 70px; height: 70px; border-radius: 50%; border: none; font-size: 3rem; cursor: pointer; display: flex; align-items: center; justify-content: center; background: rgba(255,255,255,0.05); color: white; transition: 0.3s; border: 1px solid rgba(255,255,255,0.1); }
+    .c-btn:hover { background: rgba(255,255,255,0.15); transform: translateY(-5px); box-shadow: 0 10px 20px rgba(0,0,0,0.3); }
+    .c-btn:active { transform: translateY(0) scale(0.95); }
+    .c-btn.reset { border-radius: 12px; width: auto; height: 50px; padding: 0 25px; font-size: 1.1rem; font-family: var(--font-mono); text-transform: uppercase; background: transparent; border: 1px solid var(--accent); color: var(--accent); }
+    .c-btn.reset:hover { background: rgba(188, 19, 254, 0.1); box-shadow: 0 0 15px rgba(188, 19, 254, 0.3); }
+    .c-btn.plus { color: #00ff88; border-color: rgba(0,255,136,0.3); }
+    .c-btn.plus:hover { background: rgba(0,255,136,0.1); box-shadow: 0 0 15px rgba(0,255,136,0.3); }
+    .c-btn.minus { color: #ff3366; border-color: rgba(255,51,102,0.3); }
+    .c-btn.minus:hover { background: rgba(255,51,102,0.1); box-shadow: 0 0 15px rgba(255,51,102,0.3); }
+  </style>
+</head>
+<body class="vanta-bg">
+  <div id="vanta-canvas" style="position: fixed; inset: 0; z-index: -1;"></div>
+  
+  <a href="index.html" class="back-btn">← Back to Portfolio</a>
+  
+  <div class="project-container">
+    <div class="glass-card" style="padding: 3rem; width: 100%; max-width: 500px; text-align: center;" data-tilt data-tilt-glare data-tilt-max-glare="0.2">
+      <h2 style="font-family: var(--font-display); font-size: 2rem; color: #fff; text-transform: uppercase; letter-spacing: 2px;">Tally Counter</h2>
+      
+      <div class="counter-display" id="count">0</div>
+      
+      <div class="counter-controls">
+        <button class="c-btn minus" onclick="update(-1)">-</button>
+        <button class="c-btn reset" onclick="reset()">Reset</button>
+        <button class="c-btn plus" onclick="update(1)">+</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/vanilla-tilt/1.8.0/vanilla-tilt.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r134/three.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/vanta@latest/dist/vanta.net.min.js"></script>
+  <script>
+    if (window.VANTA) VANTA.NET({ el: "#vanta-canvas", mouseControls: true, touchControls: true, gyroControls: false, minHeight: 200.00, minWidth: 200.00, scale: 1.00, scaleMobile: 1.00, color: 0xbc13fe, backgroundColor: 0x060608, points: 10.00, maxDistance: 20.00, spacing: 20.00 });
+    
+    let val = 0;
+    const countEl = document.getElementById('count');
+    
+    function updateColor() {
+      if(val > 0) countEl.style.color = '#00ff88';
+      else if(val < 0) countEl.style.color = '#ff3366';
+      else countEl.style.color = 'var(--accent-secondary)';
+    }
+
+    function update(delta) {
+      val += delta;
+      countEl.innerText = val;
+      updateColor();
+      // Animate jump
+      countEl.style.transform = 'scale(1.2) translateY(-10px)';
+      setTimeout(() => countEl.style.transform = 'scale(1) translateY(0)', 150);
+    }
+    
+    function reset() { 
+      val = 0; 
+      countEl.innerText = val; 
+      updateColor();
+      countEl.style.transform = 'scale(0.8)';
+      setTimeout(() => countEl.style.transform = 'scale(1)', 200);
+    }
+  </script>
+</body>
+</html>

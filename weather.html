@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Weather App | Uday Mishra</title>
+  <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,800&family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+  <style>
+    .project-container { min-height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 100px 20px 20px; }
+    .back-btn { position: absolute; top: 30px; left: 40px; color: var(--accent-secondary); text-decoration: none; font-family: var(--font-mono); font-weight: bold; z-index: 1001; font-size: 1.2rem; }
+    .back-btn:hover { text-shadow: 0 0 10px var(--accent-secondary); }
+    .search-bar { display: flex; gap: 10px; margin-bottom: 30px; }
+    .search-input { flex: 1; padding: 15px; border-radius: 8px; border: 1px solid var(--glass-border); background: rgba(0,0,0,0.4); color: white; font-family: var(--font-pari); font-size: 1.1rem; }
+    .search-input:focus { outline: none; border-color: var(--accent); }
+    .search-btn { padding: 0 25px; border: none; border-radius: 8px; background: var(--accent); color: white; font-weight: bold; cursor: pointer; text-transform: uppercase; font-family: var(--font-mono); transition: 0.3s; }
+    .search-btn:hover { box-shadow: 0 0 15px var(--accent); }
+    .weather-info { text-align: center; opacity: 0; transition: opacity 0.5s; }
+    .weather-icon { font-size: 5rem; margin-bottom: 10px; animation: float 3s ease-in-out infinite; }
+    @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
+    .temp { font-size: 4rem; font-family: var(--font-display); font-weight: 800; line-height: 1; margin-bottom: 5px; }
+    .city-name { font-size: 1.5rem; color: #aaa; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 20px; }
+    .details { display: flex; justify-content: space-around; background: rgba(0,0,0,0.3); padding: 15px; border-radius: 12px; }
+    .detail-item { display: flex; flex-direction: column; font-family: var(--font-mono); font-size: 0.9rem; color: #ccc; }
+    .detail-item span { font-weight: bold; color: white; font-size: 1.2rem; margin-top: 5px; }
+  </style>
+</head>
+<body class="vanta-bg">
+  <div id="vanta-canvas" style="position: fixed; inset: 0; z-index: -1;"></div>
+  
+  <a href="index.html" class="back-btn">← Back to Portfolio</a>
+  
+  <div class="project-container">
+    <div class="glass-card" style="padding: 3rem; width: 100%; max-width: 450px;" data-tilt data-tilt-glare data-tilt-max-glare="0.2">
+      <h2 style="font-family: var(--font-display); font-size: 2rem; color: var(--accent-secondary); text-align: center; margin-bottom: 2rem;">Weather Cast</h2>
+      
+      <div class="search-bar">
+        <input type="text" id="cityInput" class="search-input" placeholder="Enter city name..." value="New York" onkeyup="if(event.key === 'Enter') fetchWeather()">
+        <button class="search-btn" onclick="fetchWeather()" id="sBtn">🔍</button>
+      </div>
+
+      <div class="weather-info" id="weatherInfo">
+        <div class="weather-icon" id="wIcon">🌥️</div>
+        <div class="temp" id="wTemp">22°C</div>
+        <div class="city-name" id="wCity">New York, US</div>
+        
+        <div class="details">
+          <div class="detail-item">Humidity <span id="wHum">65%</span></div>
+          <div class="detail-item">Wind <span id="wWind">12 km/h</span></div>
+          <div class="detail-item">Condition <span id="wDesc" style="color: var(--accent-secondary); text-transform: capitalize;">Partly Cloudy</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/vanilla-tilt/1.8.0/vanilla-tilt.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r134/three.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/vanta@latest/dist/vanta.net.min.js"></script>
+  <script>
+    if (window.VANTA) VANTA.NET({ el: "#vanta-canvas", mouseControls: true, touchControls: true, gyroControls: false, minHeight: 200.00, minWidth: 200.00, scale: 1.00, scaleMobile: 1.00, color: 0xbc13fe, backgroundColor: 0x060608, points: 10.00, maxDistance: 20.00, spacing: 20.00 });
+    
+    async function fetchWeather() {
+      const city = document.getElementById('cityInput').value.trim();
+      if(!city) return;
+      
+      const btn = document.getElementById('sBtn');
+      const info = document.getElementById('weatherInfo');
+      
+      btn.innerText = '⌛';
+      info.style.opacity = '0.5';
+      
+      try {
+        // Step 1: Geocoding (Get Lat & Long)
+        const geoRes = await fetch(`https://geocoding-api.open-meteo.com/v1/search?name=${encodeURIComponent(city)}&count=1`);
+        const geoData = await geoRes.json();
+        
+        if (!geoData.results || geoData.results.length === 0) {
+          throw new Error('City not found');
+        }
+        
+        const loc = geoData.results[0];
+        const lat = loc.latitude;
+        const lon = loc.longitude;
+        const locationName = `${loc.name}, ${loc.country_code}`;
+        
+        // Step 2: Get Weather
+        const weatherRes = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current=temperature_2m,relative_humidity_2m,wind_speed_10m,weather_code&timezone=auto`);
+        const weatherData = await weatherRes.json();
+        
+        const current = weatherData.current;
+        
+        // Map WMO weather codes to emojis and descriptions
+        const weatherCodes = {
+          0: { icon: '☀️', desc: 'Clear sky' },
+          1: { icon: '🌤️', desc: 'Mainly clear' },
+          2: { icon: '⛅', desc: 'Partly cloudy' },
+          3: { icon: '☁️', desc: 'Overcast' },
+          45: { icon: '🌫️', desc: 'Fog' },
+          48: { icon: '🌫️', desc: 'Depositing rime fog' },
+          51: { icon: '🌧️', desc: 'Light drizzle' },
+          53: { icon: '🌧️', desc: 'Moderate drizzle' },
+          55: { icon: '🌧️', desc: 'Dense drizzle' },
+          61: { icon: '🌦️', desc: 'Slight rain' },
+          63: { icon: '🌧️', desc: 'Moderate rain' },
+          65: { icon: '🌧️', desc: 'Heavy rain' },
+          71: { icon: '🌨️', desc: 'Slight snow fall' },
+          73: { icon: '❄️', desc: 'Moderate snow fall' },
+          75: { icon: '❄️', desc: 'Heavy snow fall' },
+          95: { icon: '⛈️', desc: 'Thunderstorm' }
+        };
+        
+        const wmo = weatherCodes[current.weather_code] || { icon: '🌡️', desc: 'Unknown' };
+        
+        document.getElementById('wTemp').innerText = Math.round(current.temperature_2m) + '°C';
+        document.getElementById('wCity').innerText = locationName;
+        document.getElementById('wIcon').innerText = wmo.icon;
+        document.getElementById('wDesc').innerText = wmo.desc;
+        document.getElementById('wHum').innerText = current.relative_humidity_2m + '%';
+        document.getElementById('wWind').innerText = current.wind_speed_10m + ' km/h';
+
+        info.style.opacity = '1';
+        btn.innerText = '🔍';
+      } catch (error) {
+        document.getElementById('wCity').innerText = 'Error / Not Found';
+        document.getElementById('wTemp').innerText = '--°C';
+        document.getElementById('wIcon').innerText = '❌';
+        document.getElementById('wDesc').innerText = 'Try again';
+        document.getElementById('wHum').innerText = '--%';
+        document.getElementById('wWind').innerText = '--';
+        info.style.opacity = '1';
+        btn.innerText = '🔍';
+      }
+    }
+    
+    // Automatically perform an initial search on page load
+    setTimeout(() => {
+      fetchWeather();
+    }, 500);
+  </script>
+</body>
+</html>

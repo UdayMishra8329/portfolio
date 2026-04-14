@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>UDAY MISHRA | Portfolio</title>
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,600;12..96,800&family=Cabinet+Grotesk:wght@400;500;700;800&family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap"
+    rel="stylesheet">
+
+  <link rel="stylesheet" href="style.css">
+
+  <!-- GSAP & Vanilla Tilt -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js" defer></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js" defer></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/vanilla-tilt/1.8.0/vanilla-tilt.min.js" defer></script>
+
+  <!-- Vanta JS & Three.js dependencies -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r134/three.min.js" defer></script>
+  <script src="https://cdn.jsdelivr.net/npm/vanta@latest/dist/vanta.net.min.js" defer></script>
+
+  <script src="script.js" defer></script>
+</head>
+
+<body>
+
+  <!-- Loading Screen -->
+  <div class="loader">
+    <div class="loader-text">Loading Details...</div>
+  </div>
+
+  <!-- Navbar -->
+  <nav class="glass-nav">
+    <div class="nav-brand">UDAY<span>.dev</span></div>
+    <ul class="nav-links">
+      <li><a href="#hero">Home</a></li>
+      <li class="dropdown">
+        <a href="#projects">Projects <span class="caret">▼</span></a>
+        <div class="dropdown-content glass-card">
+          <a href="calculator.html">🧮 Calculator</a>
+          <a href="login.html">🔐 Login Page</a>
+          <a href="registration.html">📝 Registration</a>
+          <a href="palindrome.html">🔁 Palindrome</a>
+          <a href="counter.html">🔢 Counter</a>
+          <a href="stopwatch.html">⏱️ Stopwatch</a>
+          <a href="weather.html">🌤️ Weather App</a>
+          <a href="themes.html">🎨 Themes</a>
+          <a href="map.html">🗺️ Google Map</a>
+          <a href="prime.html">🔍 Prime Checker</a>
+        </div>
+      </li>
+      <li><a href="#about">About</a></li>
+    </ul>
+  </nav>
+
+  <!-- Hero Section -->
+  <section id="hero" class="hero-section vanta-bg">
+    <!-- Marquee background text -->
+    <div class="marquee-wrapper">
+      <div class="marquee">
+        <span>DEVELOPER // CREATOR // DESIGNER // ENGINEER // </span>
+        <span>DEVELOPER // CREATOR // DESIGNER // ENGINEER // </span>
+      </div>
+    </div>
+
+    <div class="hero-content">
+      <div class="pill-badge">✦ Open to Opportunities</div>
+      <h1 class="hero-title">
+        <span class="outline-text">HELLO, I'M</span><br>
+        <span class="gradient-text">UDAY MISHRA</span>
+      </h1>
+      <p class="hero-subtitle">
+        Computer Science Student & Crazy Creator. Building immersive, 3D web experiences that live in the future.
+      </p>
+      <div class="hero-cta">
+        <a href="#projects" class="btn-glow">Explore Work</a>
+        <a href="#about" class="btn-outline">My Story</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Projects Section -->
+  <section id="projects" class="projects-section">
+    <div class="container">
+      <h2 class="section-heading"><span class="outline-text">FEATURED</span> <br>PROJECTS</h2>
+      <div class="projects-grid">
+        <a href="calculator.html" class="project-card glass-card" data-tilt data-tilt-glare data-tilt-max-glare="0.5"
+          data-tilt-scale="1.05">
+          <div class="icon-wrap">🧮</div>
+          <h3>Calculator</h3>
+          <p>A fully functional calculator with keyboard support and history.</p>
+          <div class="btn-arrow">→</div>
+        </a>
+        <a href="login.html" class="project-card glass-card" data-tilt data-tilt-glare data-tilt-max-glare="0.5"
+          data-tilt-scale="1.05">
+          <div class="icon-wrap">🔐</div>
+          <h3>Login Page</h3>
+          <p>Modern login form with validation and animated feedback.</p>
+          <div class="btn-arrow">→</div>
+        </a>
+        <a href="registration.html" class="project-card glass-card" data-tilt data-tilt-glare data-tilt-max-glare="0.5"
+          data-tilt-scale="1.05">
+          <div class="icon-wrap">📝</div>
+          <h3>Registration Page</h3>
+          <p>Multi-field registration form with real-time validation.</p>
+          <div class="btn-arrow">→</div>
+        </a>
+        <a href="palindrome.html" class="project-card glass-card" data-tilt data-tilt-glare data-tilt-max-glare="0.5"
+          data-tilt-scale="1.05">
+          <div class="icon-wrap">🔁</div>
+          <h3>Palindrome Checker</h3>
+          <p>Check if a word or phrase reads the same forwards and backwards.</p>
+          <div class="btn-arrow">→</div>
+        </a>
+        <a href="counter.html" class="project-card glass-card" data-tilt data-tilt-glare data-tilt-max-glare="0.5"
+          data-tilt-scale="1.05">
+          <div class="icon-wrap">🔢</div>
+          <h3>Counter</h3>
+          <p>Animated counter with increment, decrement and reset controls.</p>
+          <div class="btn-arrow">→</div>
+        </a>
+        <a href="stopwatch.html" class="project-card glass-card" data-tilt data-tilt-glare data-tilt-max-glare="0.5"
+          data-tilt-scale="1.05">
+          <div class="icon-wrap">⏱️</div>
+          <h3>Stopwatch</h3>
+          <p>Precision stopwatch with lap tracking and reset functionality.</p>
+          <div class="btn-arrow">→</div>
+        </a>
+        <a href="weather.html" class="project-card glass-card" data-tilt data-tilt-glare data-tilt-max-glare="0.5"
+          data-tilt-scale="1.05">
+          <div class="icon-wrap">🌤️</div>
+          <h3>Weather App</h3>
+          <p>Live weather data by city using OpenWeatherMap API.</p>
+          <div class="btn-arrow">→</div>
+        </a>
+        <a href="themes.html" class="project-card glass-card" data-tilt data-tilt-glare data-tilt-max-glare="0.5"
+          data-tilt-scale="1.05">
+          <div class="icon-wrap">🎨</div>
+          <h3>Themes</h3>
+          <p>Dynamic theme switcher with multiple color palettes.</p>
+          <div class="btn-arrow">→</div>
+        </a>
+        <a href="map.html" class="project-card glass-card" data-tilt data-tilt-glare data-tilt-max-glare="0.5"
+          data-tilt-scale="1.05">
+          <div class="icon-wrap">🗺️</div>
+          <h3>Google Map</h3>
+          <p>Interactive map with location search and marker placement.</p>
+          <div class="btn-arrow">→</div>
+        </a>
+        <a href="prime.html" class="project-card glass-card" data-tilt data-tilt-glare data-tilt-max-glare="0.5"
+          data-tilt-scale="1.05">
+          <div class="icon-wrap">🔍</div>
+          <h3>Prime Checker</h3>
+          <p>Check if a number is prime with step-by-step explanation.</p>
+          <div class="btn-arrow">→</div>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- About Section -->
+  <section id="about" class="about-section">
+    <div class="container">
+      <div class="about-grid">
+        <div class="about-visual glass-card" data-tilt data-tilt-scale="1.05">
+          <div class="pfp">
+            <img src="https://ui-avatars.com/api/?name=Uday+Mishra&background=bc13fe&color=fff&size=200"
+              alt="Uday Mishra">
+          </div>
+          <h2>Uday Mishra</h2>
+          <p class="role">Computer Science Student</p>
+          <div class="stats">
+            <div class="stat-item">
+              <span class="num">10+</span>
+              <span class="label">Projects</span>
+            </div>
+            <div class="stat-item">
+              <span class="num">2</span>
+              <span class="label">Years Coding</span>
+            </div>
+          </div>
+        </div>
+        <div class="about-content">
+          <h2 class="section-heading">KNOW <br><span class="gradient-text">ABOUT ME</span></h2>
+          <p class="bio">
+            I'm a passionate student developer obsessed with futuristic web design and interactive digital experiences.
+            I bring the latest Gen-Z aesthetic trends to life through code.
+          </p>
+
+          <div class="details-blocks">
+            <div class="detail glass-card gs-reveal">
+              <div class="icon">🎓</div>
+              <div>
+                <h4>Education</h4>
+                <p>B.tech Computer Science Engg. - United College of Engg. & R. (2024-2028)</p>
+                <p>Intermediate - Air Force School (2023-2024)</p>
+              </div>
+            </div>
+            <div class="detail glass-card gs-reveal">
+              <div class="icon">⚡</div>
+              <div>
+                <h4>Skills</h4>
+                <p>HTML5, CSS3, JavaScript, Java, Python, C, C++, GSAP, Three.js, React, APIs</p>
+              </div>
+            </div>
+            <div class="detail glass-card gs-reveal">
+              <div class="icon">📬</div>
+              <div>
+                <h4>Contact</h4>
+                <p>uday25mishra@gmail.com</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="glass-footer">
+    <div class="container">
+      <h2>Let's Build the <span class="gradient-text">Future.</span></h2>
+      <div class="social-links">
+        <a href="https://github.com/UdayMishra8329" target="https://github.com/UdayMishra8329">GitHub</a>
+        <a href="https://linkedin.com/placeholder" target="_blank">LinkedIn</a>
+        <a href="https://twitter.com/placeholder" target="_blank">Twitter</a>
+      </div>
+      <p class="copyright">© 2026 Uday Mishra. All rights reserved..</p>
+    </div>
+  </footer>
+
+</body>
+
+</html>
